@@ -20,3 +20,7 @@ const Sinocare = NativeModules.Sinocare
 export function multiply(a: number, b: number): Promise<number> {
   return Sinocare.multiply(a, b);
 }
+export function startConnect(snDeviceType:number, address:string): Promise<number> {
+  debugger
+  return Sinocare.startConnect(snDeviceType, address);
+}
