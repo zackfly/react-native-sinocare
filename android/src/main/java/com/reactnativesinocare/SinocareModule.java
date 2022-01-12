@@ -1,4 +1,4 @@
-package com.multicriteriasdkdemo;
+package com.reactnativesinocare;
 
 import androidx.annotation.NonNull;
 
