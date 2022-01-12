@@ -24,5 +24,5 @@ export function startConnect(snDeviceType:number, address:string): Promise<numbe
   return Sinocare.startConnect(snDeviceType, address);
 }
 export function initAndAuthentication(): Promise<number> {
-  return Sinocare.multiinitAndAuthenticationply()
+  return Sinocare.initAndAuthentication()
 }
