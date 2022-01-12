@@ -15,7 +15,6 @@ import { multiply } from "react-native-sinocare";
 
 // ...
 
-const result = await multiply(3, 7);
 ```
 
 ## Contributing
