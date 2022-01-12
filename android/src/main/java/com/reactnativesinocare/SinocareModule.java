@@ -1,4 +1,4 @@
-package com.reactnativesinocare;
+package com.multicriteriasdkdemo;
 
 import androidx.annotation.NonNull;
 
@@ -9,6 +9,7 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.module.annotations.ReactModule;
 import com.sinocare.multicriteriasdk.MulticriteriaSDKManager;
 import com.sinocare.multicriteriasdk.SnCallBack;
+import com.sinocare.multicriteriasdk.auth.AuthStatusListener;
 import com.sinocare.multicriteriasdk.bean.DeviceDetectionData;
 import com.sinocare.multicriteriasdk.entity.BoothDeviceConnectState;
 import com.sinocare.multicriteriasdk.entity.DeviceDetectionState;
@@ -39,7 +40,6 @@ public class SinocareModule extends ReactContextBaseJavaModule {
     MulticriteriaSDKManager.initAndAuthentication(getCurrentActivity().getApplication(), new AuthStatusListener() {
 
       public void onAuthStatus(AuthStatus authStatus) {
-        promise.resolve(authStatus);
       }
     });
   }
@@ -50,7 +50,7 @@ public class SinocareModule extends ReactContextBaseJavaModule {
     snDevices.add(snDevice);
     MulticriteriaSDKManager.startConnect(snDevices, new SnCallBack() {
       public void onDataComing(SNDevice device, DeviceDetectionData data) {
-        promise.resolve(data);
+        promise.resolve(WritableMap.data);
       }
       @Override
       public void onDeviceStateChange(SNDevice snDevice, BoothDeviceConnectState boothDeviceConnectState) {
@@ -67,6 +67,13 @@ public class SinocareModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void multiply(int a, int b, Promise promise) {
       promise.resolve(a * b);
+  }
+  @ReactMethod
+  public void disconnect(Integer snDeviceType,String address, Promise promise) {
+    SNDevice snDevice = new SNDevice(snDeviceType, address);
+    List<SNDevice> snDevices = new ArrayList<>();
+    snDevices.add(snDevice);
+    MulticriteriaSDKManager.disConectDevice(snDevices);
   }
   public static native int nativeStartConnect(Integer snDeviceType,String address);
   public static native int nativeMultiply(int a, int b);

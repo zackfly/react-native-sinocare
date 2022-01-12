@@ -23,6 +23,9 @@ export function multiply(a: number, b: number): Promise<number> {
 export function startConnect(snDeviceType:number, address:string): Promise<number> {
   return Sinocare.startConnect(snDeviceType, address);
 }
+export function disconnect(snDeviceType:number, address:string): Promise<number> {
+  return Sinocare.disconnect(snDeviceType, address);
+}
 export function initAndAuthentication(): Promise<number> {
   return Sinocare.initAndAuthentication()
 }
