@@ -31,12 +31,11 @@ public class SinocareModule extends ReactContextBaseJavaModule {
         return NAME;
     }
 
-
     // Example method
     // See https://reactnative.dev/docs/native-modules-android
 
   @ReactMethod
-  private void startConnect(Integer snDeviceType,String address, Promise promise) {
+  public void startConnect(Integer snDeviceType,String address, Promise promise) {
     SNDevice snDevice = new SNDevice(snDeviceType, address);
     List<SNDevice> snDevices = new ArrayList<>();
     snDevices.add(snDevice);
