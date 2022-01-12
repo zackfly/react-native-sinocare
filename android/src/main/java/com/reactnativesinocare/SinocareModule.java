@@ -2,10 +2,12 @@ package com.multicriteriasdkdemo;
 
 import androidx.annotation.NonNull;
 
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.module.annotations.ReactModule;
 import com.sinocare.multicriteriasdk.MulticriteriaSDKManager;
 import com.sinocare.multicriteriasdk.SnCallBack;
@@ -40,6 +42,11 @@ public class SinocareModule extends ReactContextBaseJavaModule {
     MulticriteriaSDKManager.initAndAuthentication(getCurrentActivity().getApplication(), new AuthStatusListener() {
 
       public void onAuthStatus(AuthStatus authStatus) {
+        if(authStatus.getCode()==10000){
+          promise.resolve(String.valueOf(authStatus.getCode()));
+        }else{
+          promise.reject(String.valueOf(authStatus.getCode()),authStatus.getMsg());
+        }
       }
     });
   }
@@ -50,7 +57,11 @@ public class SinocareModule extends ReactContextBaseJavaModule {
     snDevices.add(snDevice);
     MulticriteriaSDKManager.startConnect(snDevices, new SnCallBack() {
       public void onDataComing(SNDevice device, DeviceDetectionData data) {
-        promise.resolve(WritableMap.data);
+        WritableMap map = Arguments.createMap();
+        map.putInt("bloodMeasureHigh",data.getSnDataBp().getBloodMeasureHigh());
+        map.putInt("bloodMeasureLow",data.getSnDataBp().getBloodMeasureLow());
+        map.putInt("checkHeartRate",data.getSnDataBp().getCheckHeartRate());
+        promise.resolve(map);
       }
       @Override
       public void onDeviceStateChange(SNDevice snDevice, BoothDeviceConnectState boothDeviceConnectState) {
