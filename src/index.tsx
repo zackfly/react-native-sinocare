@@ -21,6 +21,8 @@ export function multiply(a: number, b: number): Promise<number> {
   return Sinocare.multiply(a, b);
 }
 export function startConnect(snDeviceType:number, address:string): Promise<number> {
-  debugger
   return Sinocare.startConnect(snDeviceType, address);
+}
+export function initAndAuthentication(): Promise<number> {
+  return Sinocare.multiinitAndAuthenticationply()
 }

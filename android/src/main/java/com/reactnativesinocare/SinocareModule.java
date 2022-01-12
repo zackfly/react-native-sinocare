@@ -13,6 +13,7 @@ import com.sinocare.multicriteriasdk.bean.DeviceDetectionData;
 import com.sinocare.multicriteriasdk.entity.BoothDeviceConnectState;
 import com.sinocare.multicriteriasdk.entity.DeviceDetectionState;
 import com.sinocare.multicriteriasdk.entity.SNDevice;
+import com.sinocare.multicriteriasdk.utils.AuthStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,15 @@ public class SinocareModule extends ReactContextBaseJavaModule {
 
     // Example method
     // See https://reactnative.dev/docs/native-modules-android
+  @ReactMethod
+    public void initAndAuthentication(Promise promise) {
+    MulticriteriaSDKManager.initAndAuthentication(getCurrentActivity().getApplication(), new AuthStatusListener() {
 
+      public void onAuthStatus(AuthStatus authStatus) {
+        promise.resolve(authStatus);
+      }
+    });
+  }
   @ReactMethod
   public void startConnect(Integer snDeviceType,String address, Promise promise) {
     SNDevice snDevice = new SNDevice(snDeviceType, address);
