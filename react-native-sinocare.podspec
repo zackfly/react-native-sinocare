@@ -16,4 +16,7 @@ Pod::Spec.new do |s|
   s.source_files = "ios/**/*.{h,m,mm}"
 
   s.dependency "React-Core"
+  s.dependency 'AFNetworking', '4.0.1'
+  s.dependency 'LKDBHelper', '2.5.3'
+  s.dependency 'ProtocolBuffers', '1.9.11'
 end
