@@ -14,6 +14,8 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/zackfly/react-native-sinocare.git", :tag => "#{s.version}" }
 
   s.source_files = "ios/**/*.{h,m,mm}"
+  s.vendored_frameworks = 'ios/Vendors/SinoDetection.framework'
+  s.framework = 'SinoDetection'
 
   s.dependency "React-Core"
   s.dependency 'AFNetworking', '4.0.1'

@@ -1,4 +1,11 @@
 #import "Sinocare.h"
+#import <SinoDetection/SDBluetoothManager.h>
+#import <SinoDetection/SDDeviceManager.h>
+#import <SinoDetection/NSDate+SDAddition.h>
+#import <SinoDetection/SDDetectionDataModel.h>
+#import <SinoDetection/SDAuthManager.h>
+
+#define SDAppKey @"9d299af53a42df7040b6a54cd1153f04"
 
 @implementation Sinocare
 
@@ -6,8 +13,7 @@ RCT_EXPORT_MODULE()
 
 // Example method
 // See // https://reactnative.dev/docs/native-modules-ios
-RCT_REMAP_METHOD(multiply,
-                 multiplyWithA:(nonnull NSNumber*)a withB:(nonnull NSNumber*)b
+RCT_EXPORT_METHOD(multiply:(nonnull NSNumber*)b a:(nonnull NSNumber*)a
                  withResolver:(RCTPromiseResolveBlock)resolve
                  withRejecter:(RCTPromiseRejectBlock)reject)
 {
@@ -17,44 +23,27 @@ RCT_REMAP_METHOD(multiply,
 }
 // Example method
 // See // https://reactnative.dev/docs/native-modules-ios
-RCT_REMAP_METHOD(initAndAuthentication,
-                 withResolver:(RCTPromiseResolveBlock)resolve
+RCT_EXPORT_METHOD(initAndAuthentication:(RCTPromiseResolveBlock)resolve
                  withRejecter:(RCTPromiseRejectBlock)reject)
 {
   [[SDAuthManager sharedAuthManager] authWithAppKey:SDAppKey];
-  resolve();
+  resolve(NULL);
 }
-RCT_REMAP_METHOD(startConnect,
+RCT_EXPORT_METHOD(startConnect:
                  withResolver:(RCTPromiseResolveBlock)resolve
                  withRejecter:(RCTPromiseRejectBlock)reject)
 {
     SDDeviceModel *scannedDevice = [[SDDeviceModel alloc]init];
     [scannedDevice setUuid:@"Test"];
-    [scannedDevice setName:<#(NSString * _Nonnull)#>:@"安诺心"];
-    [scannedDevice setBluetoothType:<#(SDDMBluetoothType)#>:<#(NSString * _Nonnull)#>:SDDMBluetoothTypeBLE];
-    [scannedDevice setBluetoothName:<#(NSString * _Nonnull)#>:<#(NSString * _Nonnull)#>:@"低功耗蓝牙"];
+    [scannedDevice setName:@"安诺心"];
+    [scannedDevice setBluetoothType: SDDMBluetoothTypeBLE];
+    [scannedDevice setBluetoothName:@"低功耗蓝牙"];
   [[SDDeviceManager sharedDeviceManager] addBoundDevice:scannedDevice];
   [[SDBluetoothManager sharedBluetoothManager] connectDevices];;
     __weak typeof(self) weakSelf = self;
     [SDBluetoothManager sharedBluetoothManager].didReceiveData = ^(SDDetectionDataModel * _Nullable data, SDBussinessStateModel * _Nullable state, SDDeviceModel * _Nonnull boundDevice) {
         __weak typeof(self) strongSelf = weakSelf;
         NSString *time = [[NSDate date] stringWithFormat:@"yyyy-MM-dd HH:mm:ss"];
-        if (state) {
-            NSMutableDictionary *dict = [NSMutableDictionary new];
-            dict[kTCState] = state;
-            dict[kTCBoundDevice] = boundDevice;
-            dict[kTCTime] = time;
-            [strongSelf.states insertObject:[dict copy] atIndex:0];
-            [strongSelf.stateView reloadData];
-        }
-        if (data) {
-            NSMutableDictionary *dict = [NSMutableDictionary new];
-            dict[kTCData] = data;
-            dict[kTCBoundDevice] = boundDevice;
-            dict[kTCTime] = time;
-            [strongSelf.datas insertObject:dict atIndex:0];
-            [strongSelf.dataView reloadData];
-        }
     };
 
 }
