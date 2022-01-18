@@ -30,12 +30,17 @@ RCT_EXPORT_METHOD(initAndAuthentication:(RCTPromiseResolveBlock)resolve
   resolve(NULL);
 }
 RCT_EXPORT_METHOD(startConnect:
+                  (int) snDeviceType
+                  address:(nonnull NSString*)address
                  withResolver:(RCTPromiseResolveBlock)resolve
                  withRejecter:(RCTPromiseRejectBlock)reject)
 {
     SDDeviceModel *scannedDevice = [[SDDeviceModel alloc]init];
-    [scannedDevice setUuid:@"Test"];
-    [scannedDevice setName:@"安诺心"];
+    [scannedDevice setUuid:address];
+    if(snDeviceType == 7){
+     [scannedDevice setName:@"安诺心"];
+    [scannedDevice setType:SDCDeviceTypeSinoHeart];
+    }
     [scannedDevice setBluetoothType: SDDMBluetoothTypeBLE];
     [scannedDevice setBluetoothName:@"低功耗蓝牙"];
   [[SDDeviceManager sharedDeviceManager] addBoundDevice:scannedDevice];
@@ -43,7 +48,14 @@ RCT_EXPORT_METHOD(startConnect:
     __weak typeof(self) weakSelf = self;
     [SDBluetoothManager sharedBluetoothManager].didReceiveData = ^(SDDetectionDataModel * _Nullable data, SDBussinessStateModel * _Nullable state, SDDeviceModel * _Nonnull boundDevice) {
         __weak typeof(self) strongSelf = weakSelf;
-        NSString *time = [[NSDate date] stringWithFormat:@"yyyy-MM-dd HH:mm:ss"];
+        if(state.state==SDBSMBussinessStateDidReceiveMeasurementResult){
+            NSMutableDictionary *dict = [NSMutableDictionary new];
+            SDSinoHeartDataModel *heartData =data.data;
+            dict[@"bloodMeasureHigh"] =[NSString stringWithFormat:@"%ld", heartData.sbpValue];
+            dict[@"bloodMeasureLow"] =  [NSString stringWithFormat:@"%ld", heartData.dbpValue];
+            dict[@"checkHeartRate"] = [NSString stringWithFormat:@"%ld", heartData.heartRateValue];
+            resolve(dict);
+        }
     };
 
 }
